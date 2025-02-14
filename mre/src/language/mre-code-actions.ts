@@ -29,11 +29,35 @@ export class MreCodeActionProvider implements CodeActionProvider {
 				return this.editAction('Edit Entry Id', rootAst.entries, 'id', uri, data)
 			case 'editDescription':
 				return this.editAction('Edit Entry Description', rootAst.entries, 'description', uri, data)
+			case 'createEntry':
+				return this.createAction('Create Entry', uri, data, document.textDocument.lineCount)
 			default:
 				return undefined
         }
     }
 
+	private createAction(codeActionTitle: string, uri: string, data: CommonEditAction, lineCount: number) {
+		const range: Range = { start: { line: lineCount + 1, character: 0}, end: { line: lineCount + 1, character: 0}}
+		const newValue = `\nentry ${data.objectIdentifier}: '${data.newValue}'`
+		const workspaceEdit = {
+			documentChanges: [
+				{
+					textDocument: {
+						version: null,
+						uri: uri,
+					},
+					edits: [
+						{
+							range: range,
+							newText: newValue,
+						}
+					]
+				}
+			]
+		}
+
+		return CodeAction.create(codeActionTitle, workspaceEdit, CodeActionKind.Source)
+	}
     
 	private editAction(codeActionTitle: string, objectList: Entry[], propertyString: string, uri: string, data: CommonEditAction) {
 		const object = objectList.find((value) => value.id === data.objectIdentifier)

@@ -4,5 +4,4 @@
 !package.json
 !out/extension/main.cjs
 !out/language/main.cjs
-!out/table/entry-log-app.mjs
-!out/table/entry-log-app.css
+!out/table/

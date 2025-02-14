@@ -20,7 +20,7 @@ export class EntryLogEditorProvider implements vscode.CustomTextEditorProvider {
 		})
 	}
 
-	private static readonly EDIT_COMMANDS = ['editId', 'editDescription']
+	private static readonly EDIT_COMMANDS = ['editId', 'editDescription', 'createEntry']
 
 	private static readonly viewType = 'mre.entryLog'
 

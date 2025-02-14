@@ -1,0 +1,15 @@
+.ag-header-new-element {
+    content: url('./plus_sign.png');
+    margin-right: 5px;
+    margin-left: 5px;
+}
+.ag-header-new-element {
+    border: 1px solid transparent;
+}
+.ag-header-new-element:active {
+    transform: scale(0.9);
+    box-shadow: 0px 0px 2px 2px color-mix(in srgb, #fff, var(--ag-background-color) 83%);
+}
+.ag-header-new-element:hover {
+    border: 1px solid color-mix(in srgb, #fff, var(--ag-background-color) 83%);
+}
