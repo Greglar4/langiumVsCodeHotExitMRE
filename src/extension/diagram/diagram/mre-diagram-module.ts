@@ -38,6 +38,7 @@ import 'balloon-css/balloon.min.css'
 import { Container, ContainerModule, injectable } from 'inversify'
 import { ReloadModelActionHandler } from './actions/reload-model-action-handler.js'
 import { ReloadModelAction } from './actions/reload-model-action.js'
+import { CreateEdgeOperation, CreateNodeOperation, CreateOperationHandler, DefaultToolPaletteItemProvider, PaletteItem } from '@eclipse-glsp/server'
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 const mreDiagramModule = new ContainerModule((bind: any, unbind: any, isBound: any, rebind: any) => {
@@ -47,6 +48,7 @@ const mreDiagramModule = new ContainerModule((bind: any, unbind: any, isBound: a
 	configureDefaultModelElements(context)
 
 	bind(ReloadModelActionHandler).toSelf().inSingletonScope()
+	bind(MREToolPaletteItemProvider).toSelf().inSingletonScope()
 	configureActionHandler(context, ReloadModelAction.KIND, ReloadModelActionHandler)
 	configureActionHandler(context, SetModelAction.KIND, ReloadModelActionHandler)
 	configureActionHandler(context, UpdateModelAction.KIND, ReloadModelActionHandler)
@@ -109,5 +111,33 @@ export class MyNodeCreationToolMouseListener extends NodeCreationToolMouseListen
 
 		result.push(EnableDefaultToolsAction.create())
 		return result
+	}
+}
+
+@injectable()
+export class MREToolPaletteItemProvider extends DefaultToolPaletteItemProvider {
+	override getItems(): PaletteItem[] {
+		const handlers = this.operationHandlerRegistry.getAll().filter(CreateOperationHandler.is)
+		this.counter = 0
+		const nodes = this.createPaletteItem(handlers, CreateNodeOperation.KIND)
+		const edges = this.createPaletteItem(handlers, CreateEdgeOperation.KIND)
+		return [
+			{
+				id: 'node-group',
+				label: 'Nodes',
+				actions: [],
+				children: nodes,
+				icon: 'symbol-property',
+				sortString: 'A',
+			},
+			{
+				id: 'edge-group',
+				label: 'Edges',
+				actions: [],
+				children: edges,
+				icon: 'symbol-property',
+				sortString: 'B',
+			},
+		]
 	}
 }
